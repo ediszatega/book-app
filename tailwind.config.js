@@ -8,14 +8,17 @@ export default {
         "primary-color": "#e85527",
         "secondary-color": "#19394c",
       },
+      gridTemplateColumns: {
+        "repeat-auto-fil": "repeat(auto-fill, minmax(270px, 1fr)",
+      },
     },
     container: {
       padding: "2rem",
       center: true,
     },
     screens: {
-      sm: "640px",
-      md: "768px",
+      sm: { max: "640px" },
+      md: { max: "768px" },
     },
   },
   plugins: [],

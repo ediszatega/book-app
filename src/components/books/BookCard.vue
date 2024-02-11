@@ -4,12 +4,12 @@
   >
     <img
       class="w-64 h-52 mx-auto rounded object-cover px-2"
-      src="../../assets/bookExample.jpg"
+      :src="bookData.image"
       alt="Slika"
     />
     <div class="px-4 pt-2">
-      <p class="text-xl font-medium">Naslov knjige</p>
-      <p class="text-base text-gray-500">Autor knjige</p>
+      <p class="text-xl font-medium">{{ bookData.title }}</p>
+      <p class="text-base text-gray-500">{{ bookData.author }}</p>
       <div class="flex flex-wrap gap-2 justify-between pt-3">
         <button
           class="flex grow justify-center py-1 bg-primary-color rounded-md text-white"
@@ -29,5 +29,11 @@
 <script>
 export default {
   name: "BookCardComponent",
+  props: {
+    bookData: {
+      required: true,
+    },
+  },
 };
+console.log("child");
 </script>

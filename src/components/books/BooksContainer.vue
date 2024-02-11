@@ -1,16 +1,26 @@
 <template>
   <div class="books-container">
-    <BookCardComponent v-for="book in 10" />
+    <BookCardComponent
+      v-for="book in this.$store.state.books"
+      :key="book.id"
+      :bookData="book"
+    />
   </div>
 </template>
 
-<script setup>
-import BookCardComponent from "./BookCard.vue";
-</script>
-
 <script>
+import BookCardComponent from "./BookCard.vue";
 export default {
   name: "BooksContainerComponent",
+  components: { BookCardComponent },
+  methods: {
+    async getData() {
+      await this.$store.dispatch("fetchBooks");
+    },
+  },
+  mounted() {
+    this.getData();
+  },
 };
 </script>
 

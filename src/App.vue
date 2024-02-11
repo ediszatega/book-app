@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen bg-background-color">
     <NavBarComponent />
-    <!-- <SearchBarComponent /> -->
     <RouterView />
     <FooterComponent />
   </div>

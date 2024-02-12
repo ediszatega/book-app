@@ -13,6 +13,7 @@
       <div class="flex flex-wrap gap-2 justify-between pt-3">
         <RouterLink
           :to="`/book/${bookData.id}`"
+          @click="loadBookDetails(bookData.id)"
           class="flex grow justify-center py-1 bg-primary-color rounded-md text-white"
         >
           Details
@@ -32,12 +33,18 @@ import { RouterLink } from "vue-router";
 
 export default {
   name: "BookCardComponent",
+  components: { RouterLink },
   props: {
     bookData: {
       required: true,
     },
   },
-  components: { RouterLink },
+  methods: {
+    async loadBookDetails(id) {
+      /* this.$store.state.bookDetails = {}; */ //check if the state reloads faster
+      await this.$store.dispatch("fetchBookDetails", id);
+    },
+  },
 };
 console.log("child");
 </script>

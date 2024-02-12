@@ -7,7 +7,7 @@
       :src="bookData.image"
       alt="Slika"
     />
-    <div class="px-4 pt-2">
+    <div class="px-6 pt-2">
       <p class="text-xl font-medium">{{ bookData.title }}</p>
       <p class="text-base text-gray-500">{{ bookData.author }}</p>
       <div class="flex flex-wrap gap-2 justify-between pt-3">
@@ -19,9 +19,10 @@
           Details
         </RouterLink>
         <button
+          @click="handleFavourites(bookData)"
           class="flex grow justify-center py-1 bg-white border rounded-md border-primary-color text-secondary-color"
         >
-          Add to favorites
+          {{ isFavourite ? "Remove from favourites" : "Add to favourites" }}
         </button>
       </div>
     </div>
@@ -39,12 +40,21 @@ export default {
       required: true,
     },
   },
+  computed: {
+    isFavourite() {
+      return this.$store.state.favouriteBooks.some(
+        (book) => book.id === this.bookData.id
+      );
+    },
+  },
   methods: {
     async loadBookDetails(id) {
-      /* this.$store.state.bookDetails = {}; */ //check if the state reloads faster
+      this.$store.state.bookDetails = {}; //check if the state reloads faster
       await this.$store.dispatch("fetchBookDetails", id);
+    },
+    async handleFavourites(book) {
+      await this.$store.dispatch("manageFavouriteBooks", book);
     },
   },
 };
-console.log("child");
 </script>

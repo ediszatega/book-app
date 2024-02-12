@@ -13,7 +13,7 @@
       <div class="flex justify-end basis-3/5 text-base">
         <ul>
           <RouterLink to="/" class="hover:underline">Home</RouterLink>
-          <RouterLink to="/s" class="pl-3 hover:underline"
+          <RouterLink to="/favourite-books" class="pl-3 hover:underline"
             >Favorites</RouterLink
           >
         </ul>

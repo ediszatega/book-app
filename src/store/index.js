@@ -7,6 +7,7 @@ const store = createStore({
       searchBooksQuery: "",
       books: [],
       bookDetails: {},
+      favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")),
     };
   },
   actions: {
@@ -34,6 +35,9 @@ const store = createStore({
         console.error("Error fetching books:", error);
       }
     },
+    async manageFavouriteBooks(context, favouriteBook) {
+      context.commit("setFavouriteBooks", favouriteBook);
+    },
   },
   mutations: {
     setBooks(state, books) {
@@ -42,10 +46,27 @@ const store = createStore({
     setBookDetails(state, bookDetails) {
       state.bookDetails = bookDetails;
     },
+    setFavouriteBooks(state, favouriteBook) {
+      const index = state.favouriteBooks.findIndex(
+        (book) => book.id === favouriteBook.id
+      );
+
+      if (index !== -1) {
+        state.favouriteBooks.splice(index, 1);
+      } else {
+        state.favouriteBooks.push(favouriteBook);
+      }
+
+      localStorage.setItem(
+        "favouriteBooks",
+        JSON.stringify(state.favouriteBooks)
+      );
+    },
   },
   getters: {
     allBooks: (state) => state.books,
-    /* bookDetails: (state) => state.bookDetails, */
+    bookDetails: (state) => state.bookDetails,
+    allFavouriteBooks: (state) => state.favouriteBooks,
   },
 });
 

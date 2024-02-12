@@ -1,7 +1,7 @@
 <template>
   <div class="books-container">
     <BookCardComponent
-      v-for="book in this.$store.state.books"
+      v-for="book in booksArray"
       :key="book.id"
       :bookData="book"
     />
@@ -13,13 +13,10 @@ import BookCardComponent from "./BookCard.vue";
 export default {
   name: "BooksContainerComponent",
   components: { BookCardComponent },
-  methods: {
-    async getData() {
-      await this.$store.dispatch("fetchBooks");
+  props: {
+    booksArray: {
+      required: true,
     },
-  },
-  mounted() {
-    this.getData();
   },
 };
 </script>

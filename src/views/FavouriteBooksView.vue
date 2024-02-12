@@ -4,20 +4,8 @@ import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
 import SortByComponent from "../components/common/SortBy.vue";
 import PageTitleComponent from "../components/common/PageTitle.vue";
 import BooksContainerComponent from "../components/books/BooksContainer.vue";
-</script>
 
-<script>
-export default {
-  name: "HomeView",
-  methods: {
-    async getData() {
-      await this.$store.dispatch("fetchBooks");
-    },
-  },
-  mounted() {
-    this.getData();
-  },
-};
+const favouriteBooksLS = JSON.parse(localStorage.getItem("favouriteBooks"));
 </script>
 
 <template>
@@ -31,7 +19,10 @@ export default {
         <SortByComponent />
       </div>
     </div>
-    <PageTitleComponent title="Search results" />
-    <BooksContainerComponent :booksArray="$store.state.books" />
+    <PageTitleComponent
+      title="Favourite books
+    "
+    />
+    <BooksContainerComponent :booksArray="favouriteBooksLS" />
   </main>
 </template>

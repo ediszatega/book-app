@@ -4,7 +4,9 @@
       class="mx-auto w-4/5 flex flex items-center justify-center py-6 px-0 sm:flex-col"
     >
       <RouterLink to="/">
-        <div class="flex items-center basis-1/5 text-2xl text-secondary-color">
+        <div
+          class="flex items-center basis-1/5 text-2xl font-bold text-secondary-color"
+        >
           Book<span class="text-background-color font-bold">Finder</span>
         </div>
       </RouterLink>

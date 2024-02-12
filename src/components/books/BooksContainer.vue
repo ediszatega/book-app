@@ -16,6 +16,7 @@ export default {
   methods: {
     async getData() {
       await this.$store.dispatch("fetchBooks");
+      console.log(this.$store.state.books);
     },
   },
   mounted() {

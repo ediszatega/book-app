@@ -11,11 +11,12 @@
       <p class="text-xl font-medium">{{ bookData.title }}</p>
       <p class="text-base text-gray-500">{{ bookData.author }}</p>
       <div class="flex flex-wrap gap-2 justify-between pt-3">
-        <button
+        <RouterLink
+          :to="`/book/${bookData.id}`"
           class="flex grow justify-center py-1 bg-primary-color rounded-md text-white"
         >
           Details
-        </button>
+        </RouterLink>
         <button
           class="flex grow justify-center py-1 bg-white border rounded-md border-primary-color text-secondary-color"
         >
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+import { RouterLink } from "vue-router";
+
 export default {
   name: "BookCardComponent",
   props: {
@@ -34,6 +37,7 @@ export default {
       required: true,
     },
   },
+  components: { RouterLink },
 };
 console.log("child");
 </script>

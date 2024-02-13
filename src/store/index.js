@@ -7,8 +7,7 @@ const store = createStore({
       searchBooksQuery: "",
       books: [],
       bookDetails: {},
-      favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")),
-      sortBy: "",
+      favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")) || [],
       numberOfBooks: 0,
       filterModalOpened: false,
       booksFiltered: [],
@@ -39,29 +38,22 @@ const store = createStore({
         console.error("Error fetching books:", error);
       }
     },
+
     async manageFavouriteBooks(context, favouriteBook) {
       context.commit("setFavouriteBooks", favouriteBook);
     },
-    updateSortBy(context, selectedSort) {
-      context.commit("setSortBy", selectedSort);
-    },
 
-    sortBooks(context, selectedSort) {
-      context.commit("sortBooks", selectedSort);
-    },
-
-    async resetBooks(context, searchQuery) {
-      try {
-        if (searchQuery === "") {
-          const response = await axiosClient.get("recent");
-          context.commit("setBooks", response.data.books);
-        } else {
-          const response = await axiosClient.get(`search/${searchQuery}`);
-          context.commit("setBooks", response.data.books);
+    async sortBooks(context, selectedSort) {
+      const sortedBooks = context.state.books.slice().sort((a, b) => {
+        const nameA = a.title.toUpperCase();
+        const nameB = b.title.toUpperCase();
+        if (selectedSort === "asc") {
+          return nameA.localeCompare(nameB);
+        } else if (selectedSort === "desc") {
+          return nameB.localeCompare(nameA);
         }
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
+      });
+      context.commit("sortBooks", sortedBooks);
     },
 
     async fetchFilteredBooks(context, { year, pages }) {
@@ -75,8 +67,8 @@ const store = createStore({
       );
 
       const booksData = responses
-        .filter((response) => response !== undefined) // Filter out null responses
-        .map((response) => response.data); // Extract data from responses
+        .filter((response) => response !== undefined)
+        .map((response) => response.data);
 
       context.commit("filterBooks", { booksData, year, pages });
     },
@@ -86,9 +78,11 @@ const store = createStore({
       state.books = response.books;
       state.numberOfBooks = response.total;
     },
+
     setBookDetails(state, bookDetails) {
       state.bookDetails = bookDetails;
     },
+
     setFavouriteBooks(state, favouriteBook) {
       const index = state.favouriteBooks.findIndex(
         (book) => book.id === favouriteBook.id
@@ -105,65 +99,29 @@ const store = createStore({
         JSON.stringify(state.favouriteBooks)
       );
     },
-    setSortBy(state, selectedSort) {
-      state.sortBy = selectedSort;
+
+    sortBooks(state, sortedBooks) {
+      state.books = sortedBooks;
     },
 
-    sortBooks(state, selectedSort) {
-      if (selectedSort === "asc") {
-        state.books.sort((a, b) => {
-          const nameA = a.title.toUpperCase();
-          const nameB = b.title.toUpperCase();
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        });
-      } else if (selectedSort === "desc") {
-        state.books.sort((a, b) => {
-          const nameA = a.title.toUpperCase();
-          const nameB = b.title.toUpperCase();
-          if (nameA < nameB) {
-            return 1;
-          }
-          if (nameA > nameB) {
-            return -1;
-          }
-          return 0;
-        });
-      }
-    },
-
-    updateFavouriteBooks(state, favouriteBooks) {
-      state.favouriteBooks = favouriteBooks;
-      state.favouriteBooksCount = favouriteBooks.length;
-      localStorage.setItem("favouriteBooks", JSON.stringify(favouriteBooks));
-    },
     filterBooks(state, { booksData, year, pages }) {
       state.booksFiltered = booksData.filter((book) => {
         let yearCondition = true;
         let pagesCondition = true;
 
         if (year !== null) {
-          if (year === "before1990") {
-            yearCondition = book?.year <= 1990;
-          } else if (year === "1991-2010") {
-            yearCondition = book?.year >= 1991 && book?.year <= 2010;
-          } else if (year === "2011-2020") {
-            yearCondition = book?.year >= 2011 && book?.year <= 2020;
+          if (year === "before2015") {
+            yearCondition = book?.year <= 2015;
+          } else if (year === "2016-2020") {
+            yearCondition = book?.year >= 2016 && book?.year <= 2020;
           } else {
             yearCondition = book?.year >= 2021;
           }
         }
 
         if (pages !== null) {
-          if (pages === "50-less") {
-            pagesCondition = book.pages <= 50;
-          } else if (pages === "51-100") {
-            pagesCondition = book.pages >= 51 && book.pages <= 100;
+          if (pages === "100-less") {
+            pagesCondition = book.pages <= 100;
           } else if (pages === "101-200") {
             pagesCondition = book.pages >= 101 && book.pages <= 200;
           } else {
@@ -182,7 +140,7 @@ const store = createStore({
     bookDetails: (state) => state.bookDetails,
     allFavouriteBooks: (state) => state.favouriteBooks,
     favouriteBooksCount(state) {
-      return state.favouriteBooks.length;
+      return state.favouriteBooks.length || 0;
     },
   },
 });

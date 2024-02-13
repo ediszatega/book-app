@@ -1,8 +1,3 @@
-<script setup>
-import BookDetailsComponent from "../components/books/BookDetails.vue";
-import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
-</script>
-
 <template>
   <main
     class="mx-auto w-3/5 h-full py-8 flex justify-center bg-background-color md:w-4/5 md:flex-wrap"
@@ -56,3 +51,8 @@ import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
     </div>
   </main>
 </template>
+
+<script setup>
+import BookDetailsComponent from "../components/books/BookDetails.vue";
+import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
+</script>

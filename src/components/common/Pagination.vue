@@ -9,6 +9,8 @@ const onClickHandler = (page: number) => {
 .pagination-container {
   display: flex;
   column-gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .paginate-buttons {
   height: 40px;

@@ -33,14 +33,7 @@ export default {
       </div>
     </div>
     <PageTitleComponent title="Search results" />
-    <BooksContainerComponent
-      v-if="$store.state.filterModalOpened"
-      :booksArray="$store.state.booksFiltered"
-    />
-    <BooksContainerComponent
-      v-if="!$store.state.filterModalOpened"
-      :booksArray="$store.state.books"
-    />
+    <BooksContainerComponent :booksArray="$store.state.books" />
     <BaseModalComponent v-if="$store.state.filterModalOpened" />
   </main>
 </template>

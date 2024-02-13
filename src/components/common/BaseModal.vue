@@ -10,28 +10,20 @@
           <p class="pb-1">YEAR</p>
           <input
             type="radio"
-            id="before1990"
+            id="before2015"
             name="year"
-            value="before1990"
+            value="before2015"
             v-model="selectedYear"
           />
-          <label for="before1990">Before 1990</label><br />
+          <label for="before2015">Before 2015</label><br />
           <input
             type="radio"
-            id="1991-2010"
+            id="2016-2020"
             name="year"
-            value="1991-2010"
+            value="2016-2020"
             v-model="selectedYear"
           />
-          <label for="1991-2010">1991 - 2010</label><br />
-          <input
-            type="radio"
-            id="2011-2020"
-            name="year"
-            value="2011-2020"
-            v-model="selectedYear"
-          />
-          <label for="2011-2020">2011 - 2020</label><br />
+          <label for="2016-2020">2016 - 2020</label><br />
           <input
             type="radio"
             id="after2021"
@@ -45,20 +37,12 @@
           <p class="pb-1">PAGES</p>
           <input
             type="radio"
-            id="50-less"
+            id="100-less"
             name="pages"
-            value="50-less"
+            value="100-less"
             v-model="selectedPages"
           />
-          <label for="50-less">50 and less</label><br />
-          <input
-            type="radio"
-            id="51-100"
-            name="pages"
-            value="51-100"
-            v-model="selectedPages"
-          />
-          <label for="51-100">51 - 100</label><br />
+          <label for="100-less">100 and less</label><br />
           <input
             type="radio"
             id="101-200"

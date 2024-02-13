@@ -35,7 +35,7 @@ export default {
     return {
       currentPage: 1,
       booksPerPage: 10,
-      pagesShown: 0, // Initialize pagesShown as a data property
+      pagesShown: 0,
     };
   },
   methods: {

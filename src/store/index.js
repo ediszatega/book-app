@@ -9,13 +9,14 @@ const store = createStore({
       bookDetails: {},
       favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")),
       sortBy: "",
+      numberOfBooks: 0,
     };
   },
   actions: {
     async fetchBooks(context) {
       try {
         const response = await axiosClient.get("recent");
-        context.commit("setBooks", response.data.books);
+        context.commit("setBooks", response.data);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
@@ -23,7 +24,7 @@ const store = createStore({
     async searchBooks(context, searchQuery) {
       try {
         const response = await axiosClient.get(`search/${searchQuery}`);
-        context.commit("setBooks", response.data.books);
+        context.commit("setBooks", response.data);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
@@ -62,8 +63,9 @@ const store = createStore({
     },
   },
   mutations: {
-    setBooks(state, books) {
-      state.books = books;
+    setBooks(state, response) {
+      state.books = response.books;
+      state.numberOfBooks = response.total;
     },
     setBookDetails(state, bookDetails) {
       state.bookDetails = bookDetails;

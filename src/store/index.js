@@ -8,6 +8,7 @@ const store = createStore({
       books: [],
       bookDetails: {},
       favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")),
+      sortBy: "",
     };
   },
   actions: {
@@ -38,6 +39,27 @@ const store = createStore({
     async manageFavouriteBooks(context, favouriteBook) {
       context.commit("setFavouriteBooks", favouriteBook);
     },
+    updateSortBy(context, selectedSort) {
+      context.commit("setSortBy", selectedSort);
+    },
+
+    sortBooks(context, selectedSort) {
+      context.commit("sortBooks", selectedSort);
+    },
+
+    async resetBooks(context, searchQuery) {
+      try {
+        if (searchQuery === "") {
+          const response = await axiosClient.get("recent");
+          context.commit("setBooks", response.data.books);
+        } else {
+          const response = await axiosClient.get(`search/${searchQuery}`);
+          context.commit("setBooks", response.data.books);
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    },
   },
   mutations: {
     setBooks(state, books) {
@@ -61,6 +83,37 @@ const store = createStore({
         "favouriteBooks",
         JSON.stringify(state.favouriteBooks)
       );
+    },
+    setSortBy(state, selectedSort) {
+      state.sortBy = selectedSort;
+    },
+
+    sortBooks(state, selectedSort) {
+      if (selectedSort === "asc") {
+        state.books.sort((a, b) => {
+          const nameA = a.title.toUpperCase();
+          const nameB = b.title.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+      } else if (selectedSort === "desc") {
+        state.books.sort((a, b) => {
+          const nameA = a.title.toUpperCase();
+          const nameB = b.title.toUpperCase();
+          if (nameA < nameB) {
+            return 1;
+          }
+          if (nameA > nameB) {
+            return -1;
+          }
+          return 0;
+        });
+      }
     },
   },
   getters: {

@@ -15,7 +15,9 @@ export default {
       const searchQuery = event.target.value;
       let timer = null;
       clearTimeout(timer);
-      if (searchQuery.length > 2) {
+      if (searchQuery === "") {
+        this.$store.dispatch("fetchBooks", searchQuery);
+      } else if (searchQuery.length > 2) {
         timer = setTimeout(
           () => this.$store.dispatch("searchBooks", searchQuery),
           500

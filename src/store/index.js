@@ -10,6 +10,8 @@ const store = createStore({
       favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")),
       sortBy: "",
       numberOfBooks: 0,
+      filterModalOpened: false,
+      booksFiltered: [],
     };
   },
   actions: {
@@ -60,6 +62,23 @@ const store = createStore({
       } catch (error) {
         console.error("Error fetching books:", error);
       }
+    },
+
+    async fetchFilteredBooks(context, { year, pages }) {
+      const responses = await Promise.all(
+        context.state.books.map(async (book) => {
+          if (!book.id.includes("X")) {
+            const response = await axiosClient.get(`book/${book.id}`);
+            return response;
+          }
+        })
+      );
+
+      const booksData = responses
+        .filter((response) => response !== undefined) // Filter out null responses
+        .map((response) => response.data); // Extract data from responses
+
+      context.commit("filterBooks", { booksData, year, pages });
     },
   },
   mutations: {
@@ -122,6 +141,40 @@ const store = createStore({
       state.favouriteBooks = favouriteBooks;
       state.favouriteBooksCount = favouriteBooks.length;
       localStorage.setItem("favouriteBooks", JSON.stringify(favouriteBooks));
+    },
+    filterBooks(state, { booksData, year, pages }) {
+      state.booksFiltered = booksData.filter((book) => {
+        let yearCondition = true;
+        let pagesCondition = true;
+
+        if (year !== null) {
+          if (year === "before1990") {
+            yearCondition = book?.year <= 1990;
+          } else if (year === "1991-2010") {
+            yearCondition = book?.year >= 1991 && book?.year <= 2010;
+          } else if (year === "2011-2020") {
+            yearCondition = book?.year >= 2011 && book?.year <= 2020;
+          } else {
+            yearCondition = book?.year >= 2021;
+          }
+        }
+
+        if (pages !== null) {
+          if (pages === "50-less") {
+            pagesCondition = book.pages <= 50;
+          } else if (pages === "51-100") {
+            pagesCondition = book.pages >= 51 && book.pages <= 100;
+          } else if (pages === "101-200") {
+            pagesCondition = book.pages >= 101 && book.pages <= 200;
+          } else {
+            pagesCondition = book.pages > 200;
+          }
+        }
+
+        return yearCondition && pagesCondition;
+      });
+      state.books = state.booksFiltered;
+      console.log(state.booksFiltered);
     },
   },
   getters: {

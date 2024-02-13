@@ -35,6 +35,7 @@ export default {
     return {
       currentPage: 1,
       booksPerPage: 10,
+      pagesShown: 0, // Initialize pagesShown as a data property
     };
   },
   methods: {
@@ -54,10 +55,7 @@ export default {
       return this.booksArray.slice(startIndex, endIndex);
     },
     totalBooks() {
-      return this.$store.state.numberOfBooks;
-    },
-    pagesShown() {
-      return Math.ceil(this.totalBooks / this.booksPerPage);
+      return parseInt(this.$store.state.numberOfBooks);
     },
   },
   watch: {

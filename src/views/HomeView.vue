@@ -4,6 +4,7 @@ import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
 import SortByComponent from "../components/common/SortBy.vue";
 import PageTitleComponent from "../components/common/PageTitle.vue";
 import BooksContainerComponent from "../components/books/BooksContainer.vue";
+import BaseModalComponent from "../components/common/BaseModal.vue";
 </script>
 
 <script>
@@ -32,6 +33,14 @@ export default {
       </div>
     </div>
     <PageTitleComponent title="Search results" />
-    <BooksContainerComponent :booksArray="$store.state.books" />
+    <BooksContainerComponent
+      v-if="$store.state.filterModalOpened"
+      :booksArray="$store.state.booksFiltered"
+    />
+    <BooksContainerComponent
+      v-if="!$store.state.filterModalOpened"
+      :booksArray="$store.state.books"
+    />
+    <BaseModalComponent v-if="$store.state.filterModalOpened" />
   </main>
 </template>

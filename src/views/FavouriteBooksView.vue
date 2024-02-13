@@ -10,10 +10,7 @@ const favouriteBooksLS = JSON.parse(localStorage.getItem("favouriteBooks"));
 
 <template>
   <main class="mx-auto w-3/5 h-full flex flex-col bg-background-color md:w-4/5">
-    <PageTitleComponent
-      title="Favourite books
-    "
-    />
+    <PageTitleComponent title="Favourite books" class="pt-6" />
     <BooksContainerComponent :booksArray="favouriteBooksLS" />
   </main>
 </template>

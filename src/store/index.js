@@ -22,6 +22,7 @@ const store = createStore({
         console.error("Error fetching books:", error);
       }
     },
+
     async searchBooks(context, searchQuery) {
       try {
         const response = await axiosClient.get(`search/${searchQuery}`);
@@ -30,6 +31,7 @@ const store = createStore({
         console.error("Error fetching books:", error);
       }
     },
+
     async fetchBookDetails(context, id) {
       try {
         const response = await axiosClient.get(`book/${id}`);

@@ -117,11 +117,20 @@ const store = createStore({
         });
       }
     },
+
+    updateFavouriteBooks(state, favouriteBooks) {
+      state.favouriteBooks = favouriteBooks;
+      state.favouriteBooksCount = favouriteBooks.length;
+      localStorage.setItem("favouriteBooks", JSON.stringify(favouriteBooks));
+    },
   },
   getters: {
     allBooks: (state) => state.books,
     bookDetails: (state) => state.bookDetails,
     allFavouriteBooks: (state) => state.favouriteBooks,
+    favouriteBooksCount(state) {
+      return state.favouriteBooks.length;
+    },
   },
 });
 

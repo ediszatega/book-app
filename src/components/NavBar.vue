@@ -1,7 +1,7 @@
 <template>
   <header class="sticky top-0 bg-primary-color shadow-lg">
     <nav
-      class="mx-auto w-4/5 flex flex items-center justify-center py-6 px-0 sm:flex-col"
+      class="mx-auto w-4/5 flex items-center justify-center py-6 px-0 sm:flex-col"
     >
       <RouterLink to="/">
         <div
@@ -11,11 +11,18 @@
         </div>
       </RouterLink>
       <div class="flex justify-end basis-3/5 text-base">
-        <ul>
+        <ul class="flex">
           <RouterLink to="/" class="hover:underline">Home</RouterLink>
-          <RouterLink to="/favourite-books" class="pl-3 hover:underline"
-            >Favorites</RouterLink
-          >
+          <RouterLink to="/favourite-books" class="pl-3 hover:underline">
+            <div class="flex">
+              Favourites
+              <div
+                class="ml-1 w-7 text-white text-center border-2 rounded-full bg-accent-color"
+              >
+                {{ favouriteBooksCount }}
+              </div>
+            </div>
+          </RouterLink>
         </ul>
       </div>
     </nav>
@@ -29,6 +36,11 @@ import { RouterLink } from "vue-router";
 <script>
 export default {
   name: "NavBarComponent",
+  computed: {
+    favouriteBooksCount() {
+      return this.$store.getters.favouriteBooksCount;
+    },
+  },
 };
 </script>
 

@@ -9,6 +9,7 @@ const store = createStore({
       bookDetails: JSON.parse(localStorage.getItem("bookDetails")) || {},
       favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")) || [],
       numberOfBooks: 0,
+      selectedFilters: {},
       filterModalOpened: false,
       booksFiltered: [],
     };
@@ -60,19 +61,13 @@ const store = createStore({
     },
 
     async fetchFilteredBooks(context, { year, pages }) {
-      const responses = await Promise.all(
-        context.state.books.map(async (book) => {
-          if (!book.id.includes("X")) {
-            const response = await axiosClient.get(`book/${book.id}`);
-            return response;
-          }
-        })
-      );
-
-      const booksData = responses
-        .filter((response) => response !== undefined)
-        .map((response) => response.data);
-
+      const booksData = [];
+      for (const book of context.state.books) {
+        if (!book.id.includes("X")) {
+          const response = await axiosClient.get(`book/${book.id}`);
+          booksData.push(response.data);
+        }
+      }
       context.commit("filterBooks", { booksData, year, pages });
     },
   },
@@ -123,7 +118,7 @@ const store = createStore({
             yearCondition = book?.year <= 2015;
           } else if (year === "2016-2020") {
             yearCondition = book?.year >= 2016 && book?.year <= 2020;
-          } else {
+          } else if (year === "after2021") {
             yearCondition = book?.year >= 2021;
           }
         }
@@ -133,7 +128,7 @@ const store = createStore({
             pagesCondition = book.pages <= 100;
           } else if (pages === "101-200") {
             pagesCondition = book.pages >= 101 && book.pages <= 200;
-          } else {
+          } else if (pages === "more-than-200") {
             pagesCondition = book.pages > 200;
           }
         }

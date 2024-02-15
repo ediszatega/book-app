@@ -99,11 +99,13 @@ export default {
       }
     },
     filterData() {
-      this.$store.state.filterModalOpened = false;
-      this.$store.dispatch("fetchFilteredBooks", {
-        year: this.selectedYear,
-        pages: this.selectedPages,
-      });
+      if (this.selectedYear !== "" || this.selectedPages !== "") {
+        this.$store.state.filterModalOpened = false;
+        this.$store.dispatch("fetchFilteredBooks", {
+          year: this.selectedYear,
+          pages: this.selectedPages,
+        });
+      }
     },
   },
 };

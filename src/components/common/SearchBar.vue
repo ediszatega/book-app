@@ -1,5 +1,6 @@
 <template>
   <input
+    v-model="searchQuery"
     @input="searchData"
     type="text"
     placeholder="Search books"
@@ -10,19 +11,23 @@
 <script>
 export default {
   name: "SearchBarComponent",
+  data() {
+    return {
+      timer: null,
+      searchQuery: "",
+    };
+  },
   methods: {
-    searchData(event) {
-      const searchQuery = event.target.value;
-      let timer = null;
-      clearTimeout(timer);
-      if (searchQuery === "") {
-        this.$store.dispatch("fetchBooks", searchQuery);
-      } else if (searchQuery.length > 2) {
-        timer = setTimeout(
-          () => this.$store.dispatch("searchBooks", searchQuery),
-          500
-        );
-      }
+    searchData() {
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(() => {
+        if (this.searchQuery === "") {
+          this.$store.dispatch("fetchBooks");
+        } else if (this.searchQuery.length > 2) {
+          this.$store.dispatch("searchBooks", this.searchQuery);
+        }
+      }, 500);
     },
   },
 };

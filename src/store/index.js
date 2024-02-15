@@ -6,7 +6,7 @@ const store = createStore({
     return {
       searchBooksQuery: "",
       books: [],
-      bookDetails: {},
+      bookDetails: JSON.parse(localStorage.getItem("bookDetails")) || {},
       favouriteBooks: JSON.parse(localStorage.getItem("favouriteBooks")) || [],
       numberOfBooks: 0,
       filterModalOpened: false,
@@ -17,6 +17,7 @@ const store = createStore({
     async fetchBooks(context) {
       try {
         const response = await axiosClient.get("recent");
+        context.state.searchBooksQuery = "";
         context.commit("setBooks", response.data);
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -26,6 +27,7 @@ const store = createStore({
     async searchBooks(context, searchQuery) {
       try {
         const response = await axiosClient.get(`search/${searchQuery}`);
+        context.state.searchBooksQuery = searchQuery;
         context.commit("setBooks", response.data);
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -42,20 +44,19 @@ const store = createStore({
     },
 
     async manageFavouriteBooks(context, favouriteBook) {
-      context.commit("setFavouriteBooks", favouriteBook);
+      const index = context.state.favouriteBooks.findIndex(
+        (book) => book.id === favouriteBook.id
+      );
+
+      if (index !== -1) {
+        context.commit("removeFromFavourites", index);
+      } else {
+        context.commit("addToFavourites", favouriteBook);
+      }
     },
 
     async sortBooks(context, selectedSort) {
-      const sortedBooks = context.state.books.slice().sort((a, b) => {
-        const nameA = a.title.toUpperCase();
-        const nameB = b.title.toUpperCase();
-        if (selectedSort === "asc") {
-          return nameA.localeCompare(nameB);
-        } else if (selectedSort === "desc") {
-          return nameB.localeCompare(nameA);
-        }
-      });
-      context.commit("sortBooks", sortedBooks);
+      context.commit("sortBooks", selectedSort);
     },
 
     async fetchFilteredBooks(context, { year, pages }) {
@@ -83,27 +84,33 @@ const store = createStore({
 
     setBookDetails(state, bookDetails) {
       state.bookDetails = bookDetails;
+
+      localStorage.setItem("bookDetails", JSON.stringify(state.bookDetails));
     },
 
-    setFavouriteBooks(state, favouriteBook) {
-      const index = state.favouriteBooks.findIndex(
-        (book) => book.id === favouriteBook.id
+    addToFavourites(state, book) {
+      state.favouriteBooks.push(book);
+      localStorage.setItem(
+        "favouriteBooks",
+        JSON.stringify(state.favouriteBooks)
       );
-
-      if (index !== -1) {
-        state.favouriteBooks.splice(index, 1);
-      } else {
-        state.favouriteBooks.push(favouriteBook);
-      }
-
+    },
+    removeFromFavourites(state, index) {
+      state.favouriteBooks.splice(index, 1);
       localStorage.setItem(
         "favouriteBooks",
         JSON.stringify(state.favouriteBooks)
       );
     },
 
-    sortBooks(state, sortedBooks) {
-      state.books = sortedBooks;
+    sortBooks(state, selectedSort) {
+      state.books.sort((a, b) => {
+        const nameA = a.title.toUpperCase();
+        const nameB = b.title.toUpperCase();
+        return selectedSort === "asc"
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      });
     },
 
     filterBooks(state, { booksData, year, pages }) {
@@ -134,7 +141,6 @@ const store = createStore({
         return yearCondition && pagesCondition;
       });
       state.books = state.booksFiltered;
-      console.log(state.booksFiltered);
     },
   },
   getters: {

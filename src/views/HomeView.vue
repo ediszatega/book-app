@@ -2,7 +2,7 @@
 import SearchBarComponent from "../components/common/SearchBar.vue";
 import SecondaryButtonComponent from "../components/common/SecondaryButton.vue";
 import SortByComponent from "../components/common/SortBy.vue";
-import PageTitleComponent from "../components/common/PageTitle.vue";
+import PageTitleComponent from "../components/common/PageTitle.js";
 import BooksContainerComponent from "../components/books/BooksContainer.vue";
 import BaseModalComponent from "../components/common/BaseModal.vue";
 </script>

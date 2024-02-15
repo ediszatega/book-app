@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     async loadBookDetails(id) {
-      this.$store.state.bookDetails = {};
       await this.$store.dispatch("fetchBookDetails", id);
     },
     async handleFavourites(book) {

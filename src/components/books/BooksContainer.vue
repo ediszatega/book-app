@@ -21,7 +21,6 @@
 
 <script>
 import BookCardComponent from "./BookCard.vue";
-import Pagination from "../common/Pagination.vue";
 
 export default {
   name: "BooksContainerComponent",
@@ -30,12 +29,17 @@ export default {
     booksArray: {
       required: true,
     },
+    flag: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
       currentPage: 1,
       booksPerPage: 10,
       pagesShown: 0,
+      totalFavouriteBooks: this.$store.getters.favouriteBooksCount,
     };
   },
   methods: {
@@ -52,10 +56,18 @@ export default {
         this.currentPage * this.booksPerPage - this.booksPerPage;
       const endIndex = startIndex + this.booksPerPage;
 
+      if (this.booksArray === undefined) {
+        return [];
+      }
+
       return this.booksArray.slice(startIndex, endIndex);
     },
     totalBooks() {
-      return parseInt(this.$store.state.numberOfBooks);
+      if (this.flag === "favBooks") {
+        return parseInt(this.totalFavouriteBooks);
+      } else {
+        return parseInt(this.$store.state.numberOfBooks);
+      }
     },
   },
   watch: {
@@ -73,5 +85,32 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 14px;
   padding-bottom: 2rem;
+}
+.pagination-container {
+  display: flex;
+  column-gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.paginate-buttons {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(217, 217, 217);
+  color: black;
+}
+.paginate-buttons:hover {
+  background-color: #d8d8d8;
+}
+.active-page {
+  background-color: theme("colors.primary-color");
+  border: 1px solid theme("colors.primary-color");
+  color: white;
+}
+.active-page:hover {
+  background-color: theme("colors.secondary-color");
+  border: 1px solid theme("colors.secondary-color");
 }
 </style>
